@@ -1,0 +1,13 @@
+# etc/logrotate.d/blocked_suspicious
+/var/log/nginx/blocked_suspicious.log {
+    daily
+    rotate 14
+    compress
+    missingok
+    notifempty
+    create 640 nginx adm
+    sharedscripts
+    postrotate
+        [ -s /run/nginx.pid ] && kill -USR1 `cat /run/nginx.pid`
+    endscript
+}
