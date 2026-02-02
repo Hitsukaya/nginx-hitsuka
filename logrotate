@@ -1,0 +1,101 @@
+# --- BTMP ---
+/var/log/btmp {
+    monthly
+    rotate 1
+    compress
+    missingok
+    notifempty
+    create 0600 root utmp
+    dateext
+    dateformat -%Y%m%d-%H%M%S
+}
+
+# --- WTMP ---
+/var/log/wtmp {
+    monthly
+    rotate 1
+    compress
+    missingok
+    notifempty
+    create 0664 root utmp
+    dateext
+    dateformat -%Y%m%d-%H%M%S
+}
+
+# --- Fail2Ban ---
+/var/log/fail2ban.log {
+    weekly
+    rotate 4
+    compress
+    missingok
+    notifempty
+    create 0640 root adm
+    sharedscripts
+    postrotate
+        [ -s /run/fail2ban/fail2ban.pid ] && kill -USR1 `cat /run/fail2ban/fail2ban.pid`
+    endscript
+    dateext
+    dateformat -%Y%m%d-%H%M%S
+}
+
+# --- Firewalld ---
+/var/log/firewalld {
+    weekly
+    rotate 4
+    compress
+    missingok
+    notifempty
+    create 0640 root root
+    dateext
+    dateformat -%Y%m%d-%H%M%S
+}
+
+# --- PHP-FPM ---
+/var/log/php-fpm/*.log {
+    weekly
+    rotate 4
+    compress
+    missingok
+    notifempty
+    create 0640 root adm
+    sharedscripts
+    postrotate
+        [ -s /run/php-fpm/www.pid ] && kill -USR1 `cat /run/php-fpm/www.pid`
+    endscript
+    dateext
+    dateformat -%Y%m%d-%H%M%S
+}
+
+# --- Nginx ---
+/var/log/nginx/access.log
+/var/log/nginx/error.log {
+    daily
+    rotate 10
+    compress
+    missingok
+    notifempty
+    create 0640 nginx root
+    sharedscripts
+    postrotate
+        [ -s /run/nginx.pid ] && kill -USR1 `cat /run/nginx.pid`
+    endscript
+    dateext
+    dateformat -%Y%m%d-%H%M%S
+}
+
+# --- Nginx Blocked ---
+/var/log/nginx/blocked_suspicious.log {
+    daily
+    rotate 14
+    compress
+    missingok
+    notifempty
+    create 0640 nginx adm
+    sharedscripts
+    postrotate
+        [ -s /run/nginx.pid ] && kill -USR1 `cat /run/nginx.pid`
+    endscript
+    dateext
+    dateformat -%Y%m%d-%H%M%S
+}
+
